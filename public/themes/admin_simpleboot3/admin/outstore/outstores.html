@@ -1,0 +1,117 @@
+<include file="public@header" />
+</head>
+<body>
+
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:url('outstores')}">所有{$flag}单</a></li>
+			<li class=""><a href="{:url('index')}">所有{$flag}记录</a></li>
+			<li><a href="{:url('add')}">添加{$flag}</a></li>
+		</ul>
+		<form class="well form-inline margin-top-20" method="post"
+			action="{:url('outstores')}">
+
+			状态: 
+			<select class="form-control" name="status" style="width: 140px;">
+				<option value="0">所有</option>
+				<foreach name="statuss" item="vo" k="key">
+				<option value="{$key+1}" <if condition="($key+1) eq $data.status">selected</if>>{$vo}
+				</option>
+				</foreach>
+			</select> &nbsp;&nbsp; 
+			仓库: 
+			<select class="form-control" name="store"
+				style="width: 140px;">
+				<option value="0">所有</option>
+				<foreach name="stores" item="vo" k="key">
+				<option value="{$vo.id}" <if condition="$vo.id eq $data.store">selected</if>>{$vo.name}
+				</option>
+				</foreach>
+			</select> &nbsp;&nbsp; 
+			销售员: 
+			<select class="form-control" name="worker"
+				style="width: 140px;">
+				<option value="0">所有</option>
+				<foreach name="workers" item="vo" k="key">
+				<option value="{$vo.id}" <if condition="$vo.id eq $data.worker">selected</if>>{$vo.name}
+				</option>
+				</foreach>
+			</select> &nbsp;&nbsp; 
+			顾客: 
+			<select class="form-control" name="supplier"
+				style="width: 140px;">
+				<option value="0">所有</option>
+				<foreach name="suppliers" item="vo" k="key">
+				<option value="{$vo.id}" <if condition="$vo.id eq $data.supplier">selected</if>>{$vo.name}
+				</option>
+				</foreach>
+			</select> &nbsp;&nbsp; 
+			
+			出库单号:
+			<input type="text" name="oid" value="{$data.oid}"> 
+			<input type="submit"
+				class="btn btn-primary" value="搜索" /> <a class="btn btn-danger"
+				href="{:url('index')}">清空</a>
+		</form>
+		<form method="post" class="js-ajax-form margin-top-20" action="">
+
+
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th width="50">ID</th>
+						<th>出库单号</th>
+						<th>仓库</th>
+						<th>销售员</th>
+						<th>顾客</th>
+					
+						<th>样数</th>
+						<th>数量</th>
+						<th>产品总价</th>
+						<th>备注</th>
+						<th>状态</th>
+						<th>出库员</th>
+						<th>审核员</th>
+						<th>出库时间</th>
+						<th>更新时间</th>
+						<th width="250">{:lang('ACTIONS')}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<foreach name="list" item="vo">
+					<tr>
+
+						<td>{$vo.id}</td>
+						<td>{$vo.oid}</td>
+						<td>{$vo.store_name}</td>
+						<td>{$vo.seller_name}</td>
+						<td>{$vo.buyer_name}</td>
+						<td>{$vo.count}</td>
+						<td>{$vo.num}</td>
+						<td>￥{$vo.cprice}</td>
+						<td>{$vo.cdsc}</td>
+						<td>{$statuss[$vo['status']]}</td>
+						<td>{$vo.aname0}</td>
+						<td>{$vo.aname1}</td>
+						<td>{$vo.insert_time|date='Y-m-d H:i:s',###}</td>
+						<td>{$vo.time|date='Y-m-d H:i:s',###}</td>
+						<td>
+						<a href="{:url('excel',array('id'=>$vo['id']))}">出库导出</a>
+							&nbsp;|&nbsp;
+						<a href="{:url('excel0',array('id'=>$vo['id']))}">销售导出</a>
+							&nbsp;|&nbsp; 
+						<a href="{:url('edit',array('id'=>$vo['id']))}">{:lang('EDIT')}</a>
+							&nbsp;|&nbsp; <a href="{:url('delete',array('id'=>$vo['id']))}"
+							class="js-ajax-delete"> {:lang('DELETE')} </a></td>
+					</tr>
+					</foreach>
+				</tbody>
+
+			</table>
+
+		</form>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>

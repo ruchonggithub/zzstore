@@ -1,0 +1,135 @@
+ <include file="public@header"/>
+<style>
+    
+</style>
+ 
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs"> 
+			<li class="active"><a href="{:url('index')}">出入库统计</a></li> 
+		 
+		</ul>
+		<form class="well form-inline margin-top-20" method="post"
+			action="{:url('index')}">
+			仓库: 
+			<select class="form-control" name="store" style="width: 140px;">
+				<option value='0'>全部</option> 
+				 <foreach name="stores" item="vo" k="key">
+				<option value="{$vo.id}" <if condition="$vo.id eq $data.store">selected</if>>{$vo.name}
+				</option>
+				</foreach>
+			</select> &nbsp;&nbsp; 
+			  
+			<input type="submit"
+				class="btn btn-primary" value="搜索" /> 
+			<a class="btn btn-danger"
+				href="{:url('index')}">清空</a>
+				 
+		</form>
+		<h4 class="well">前12个月共入库{$count1['order'][0]}次，出库{$count2['order'][0]},单月统计如下：</h4>
+		<canvas id="order" width="800" height="400"></canvas>
+		<br/>
+		<h4 class="well">前12个月共入库花费￥{$count1['money'][0]}，出库收款￥{$count2['money'][0]},单月统计如下：</h4>
+		
+		<canvas id="money" width="800" height="400"></canvas>
+		<br/>
+	   
+	</div>
+<script src="__STATIC__/js/admin.js"></script>
+<script src="__STATIC__/js/chart/chart-1.0.1.js"></script>
+ <script>
+		var labels=new Array(12);
+		
+		var i=12;
+		<volist name="labels" id="vo" >
+			i--;
+			labels[i]='{$vo}';
+		</volist>
+		var order1=new Array(12);
+		i=12;
+		<volist name="count1.order" id="vo" offset="1" length='12'>
+			i--;
+			order1[i]='{$vo}';
+		</volist>
+		
+		var money1=new Array(12);
+		i=12;
+		<volist name="count1.money" id="vo" offset="1" length='12'>
+			i--;
+			money1[i]='{$vo}';
+		</volist>
+		var order2=new Array(12);
+		i=12;
+		<volist name="count2.order" id="vo" offset="1" length='12'>
+			i--;
+			order2[i]='{$vo}';
+		</volist>
+		
+		var money2=new Array(12);
+		i=12;
+		<volist name="count2.money" id="vo" offset="1" length='12'>
+			i--;
+			money2[i]='{$vo}';
+		</volist>
+		 
+		
+		var data_order = {
+			labels : labels,
+			datasets : [
+				{
+					lineItemName : "每月入库单数",
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,1)",
+					pointColor : "rgba(220,220,220,1)",
+					pointStrokeColor : "#fff",
+					data : order1
+				},
+				{
+					lineItemName : "每月出库单数",
+					fillColor : "rgba(151,187,205,0.5)",
+					strokeColor : "rgba(151,187,205,1)",
+					pointColor : "rgba(151,187,205,1)",
+					pointStrokeColor : "#fff",
+					data : order2
+				}
+			]
+		};
+		var data_money = {
+				labels : labels,
+				datasets : [
+					{
+						lineItemName : "每月入库总金额",
+						fillColor : "rgba(220,220,220,0.5)",
+						strokeColor : "rgba(220,220,220,1)",
+						pointColor : "rgba(220,220,220,1)",
+						data : money1
+					},
+					{
+						lineItemName : "每月出库总金额",
+						fillColor : "rgba(151,187,205,0.5)",
+						strokeColor : "rgba(151,187,205,1)",
+						pointColor : "rgba(151,187,205,1)",
+						pointStrokeColor : "#fff",
+						data : money2
+					}
+				]
+			};
+		 
+		
+		window.onload = function(){				
+			var ctx_order = document.getElementById("order").getContext("2d");
+			new Chart(ctx_order).Line(data_order);
+			var ctx_money = $('#money').get(0).getContext("2d");
+			new Chart(ctx_money).Line(data_money);
+		  
+		 
+		}
+		
+	</script>
+<script>
+ 
+</script>
+ 
+</body>
+</html>

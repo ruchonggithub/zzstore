@@ -1,0 +1,326 @@
+<include file="public@header" />
+ <link href="__TMPL__/public/assets/simpleboot3/css/zzinfo.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li class=""><a href="{:url('outstores')}">所有{$flag}单</a></li>
+        	<li class=""><a href="{:url('index')}">所有{$flag}记录</a></li>
+			<li><a href="{:url('add')}">添加{$flag}</a></li>
+			<li class="active"><a href="{:url('edit',['id'=>$info.id])}">编辑{$flag}</a></li>
+		</ul>
+		<form method="post"
+			class="form-horizontal js-ajax-form margin-top-20"
+			action="{:url('editPost')}">
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">出库单号</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" name="oid" value="{$info.oid}"
+						readonly />
+					 	<input type="hidden" class="form-control" name="uname"
+						value="{$admin.user_nickname|default=$admin.user_login}" />
+					<input type="hidden" name="id" value="{$info.id}" />
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">出库仓库</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control"  value="{$info.store_name}" readonly />
+					 
+				</div>
+			</div>
+			
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">销售人</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control"  value="{$info.seller_name}" readonly />
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">顾客</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control"  value="{$info.buyer_name}" readonly />
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">运费</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control"  name="freight" value="{$info.freight}" readonly/> 
+					<eq name="info.is_freight" value="1">支付运费<else/>不支付运费</eq> 
+				</div>
+			</div>
+			 
+			<div style="clear: both"></div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">出库记录</label>
+				<div class="col-md-6 col-sm-10">
+					<table class="table table-hover table-bordered table-list">
+						<thead>
+							<tr>
+								<th>出库id</th>
+								<th>产品分类</th>
+								<th>产品名称--规格</th>
+								<th>条码编号</th> 
+								<th>自编号</th> 
+								<th>产品单位</th>
+								<th>产品参考售价</th>
+								<th>产品数量</th>
+
+								<th>产品售价</th>
+								<th>产品总价</th>
+								<th>备注</th>
+						 
+								<th class="zzdel">操作</th>
+							 
+							</tr>
+						</thead>
+						<tbody>
+
+							<foreach name="list" item="vo">
+							<tr class="tr">
+								<td class="id">{$vo.id}</td>
+								<td>{$vo.cname}</td>
+								<td>{$vo.gname}--{$vo.ganame}</td>
+								<td>{$vo.gsn}</td>
+								<td>{$vo.gsn0}</td>  
+								<td>{$vo.unit}</td>
+								<td>{$vo.outprice0}</td>
+								<td class="num">{$vo.num}</td>
+								<td class="outprice">{$vo.outprice}</td>
+								<td class="cprice">{$vo.cprice}</td>
+								<td>{$vo.dsc}</td>
+						 
+								<td class="zzdel"><span class="btn btn-default del">删除</span></td>
+						 
+							</tr>
+							</foreach>
+
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+	 
+		<if condition="($Think.session.ADMIN_ID eq $info.aid0)&&($info.status eq 0)">
+			<div class="form-group zzadd" >
+				<label class="col-sm-2 control-label">添加出库</label>
+				<div class="col-md-6 col-sm-10">
+					分类
+					<select id="cate">
+						<option value="0">选择分类</option> {$cates_tree}
+					</select> 
+					产品
+					<select id="goods">
+						<option class="goods00" value="0">选择产品</option>
+						<foreach name="goods" item="vo">
+						<option class="{$vo.pathes}" value="{$vo.id}-{$vo.goods}">
+							{$vo.gname}-{$vo.attr}-{$vo.unit}-参考进价{$vo.outprice}-参考售价{$vo.outprice}-库存数{$vo.num}
+						</option>
+						</foreach>
+					</select> 
+					<br/>
+					数量<input type="number" id="zznum" value="1" /> 
+					售价<input type="number" step="0.01" id="zzprice" value="" /> 
+					备注<input type="text" id="zzdsc" value="" />
+
+					<button type="button" id="zzadd">添加</button>
+					<span class="error" style="color: red;"></span>
+				</div>
+			</div>
+		</if>
+			<div style="clear:both"></div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">出库品种合计</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="count" value="{$info.count}" 
+						readonly />  
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">出库数量合计</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="num" value="{$info.num}"
+						readonly />  
+
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">产品总价</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="cprice" value="{$info.cprice}"
+						readonly />  
+
+				</div>
+			</div>
+			<neq name="info.status" value="0">
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">费用总计</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" id="cprice1" value="{$info.cprice1}"
+						readonly />  
+				</div>
+			</div>
+		</neq>
+				<div style="clear:both"></div>
+			<div class="form-group ">
+				<label class="col-sm-2 control-label">出库备注</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control"  name="cdsc" value="{$info.cdsc}"/>  
+
+				</div>
+			</div>
+		
+			<div class="form-group">
+				<label class="col-sm-2 control-label">出库状态</label>
+				<div class="col-md-6 col-sm-10">
+				<foreach name="statuss" item="vo" k="key">
+					<input type="radio" class=""  name="status" value="{$key}" <if condition="$info.status eq $key">checked</if>/>{$vo}
+				</foreach>
+					 
+				</div>
+			</div>
+			 <div class="form-group">
+				<label class="col-sm-2 control-label">审核人</label>
+				<div class="col-md-6 col-sm-10">
+				 <input type="text" value="{$info.aname1|default='未审核'}" readonly/>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">审核备注</label>
+				<div class="col-md-6 col-sm-10">
+				 <input type="text"  class="form-control" name="rdsc" value="{$info.rdsc}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('SAVE')}</button>
+					<a class="btn btn-default" href="{:url('outstores')}">{:lang('BACK')}</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">说明</label>
+				<div class="col-md-6 col-sm-10">
+				 <p>已提交的出库单不能再编辑，但可以先修改为未提交再编辑，且只有原出库操作员才能编辑自己的出库单</p>
+				  <p>已审核通过的出库单不能再修改，可以通过出库操作修改库存，请谨慎操作</p>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+	<script>
+		var oid = "{$info.oid}";
+		var status="{$info.status}";
+		var aid0="{$info.aid0}";
+		var adminid="{$Think.session.ADMIN_ID}";
+		if(status!='0' || aid0!=adminid){
+			$('.zzdel').hide(); 
+			$('.zzadd').hide(); 
+		}
+		$('#cate').change(function() {
+			var cid = this.value;
+			$('#goods option').hide();
+			$('#goods .goods00').show();
+			$('#goods .goods' + cid).show();
+			$('#goods .goods00').prop('selected', true);
+		});
+
+		$(document).on('click', '.del', function() {
+			 
+			var tr=$(this).parents('tr');
+			var id = parseInt(tr.find('.id').text());
+			$.ajax({
+				type : 'post',
+				url : "{:url('outstore_delete')}",
+				dataType : 'json',
+				data : {
+					'id' : id,
+				},
+				success : function(data) {
+					if(data.code==0){
+						$('.error').text(data.msg);
+					}else{
+						tr.remove();
+						var dd=data.data;
+						$('#count').val(dd.ccount);
+						$('#num').val(dd.cnum);
+						$('#cprice').val(dd.ccprice);
+					} 
+				},
+				error : function(data) {
+					console.log(data);
+					$('.error').text('操作失败，请确认有权限操作或刷新');
+				},
+			});
+			
+		});
+		$(document).on('click', '#zzadd', function() {
+			 
+			var id = $('#goods').val();
+			var num = parseInt($('#zznum').val());
+			var price = parseFloat($.trim($('#zzprice').val()));
+			var dsc = $.trim($('#zzdsc').val());
+
+			if (id == '0') {
+				$('.error').text('请选择产品');
+				$('#goods').focus();
+				return 0;
+			}
+			if (!(num > 0)) {
+
+				$('.error').text('请填写产品数量');
+				$('#zznum').focus();
+				return 0;
+			}
+			if (!(price>0)) {
+				$('.error').text('请填写产品售价');
+				$('#zzprice').focus();
+				return 0;
+			}
+			$('.error').text('');
+			$.ajax({
+				type : 'post',
+				url : "{:url('outstore_add')}",
+				dataType : 'json',
+				data : {
+					'oid' : oid,
+					'id' : id,
+					'num' : num,
+					'price' : price,
+					'dsc' : dsc
+				},
+				success : function(data) {
+					if(data.code==0){
+						$('.error').text(data.msg);
+					}else{
+						var dd=data.data;
+						var tr='<tr class="tr">'+
+								'<td  class="id">'+dd.id+'</td>'+
+								'<td>'+dd.cname+'</td>'+
+								'<td>'+dd.gname+'--'+dd.ganame+'</td>'+
+								'<td>'+dd.gsn+'</td>'+ 
+								'<td>'+dd.gsn0+'</td>'+ 
+								'<td>'+dd.unit+'</td>'+
+								'<td>'+dd.outprice0+'</td>'+
+								'<td class="num">'+dd.num+'</td>'+
+								'<td class="outprice">'+dd.outprice+'</td>'+
+								'<td class="cprice">'+dd.cprice+'</td>'+
+								'<td>'+dd.dsc+'</td>'+
+								'<td><span class="btn btn-default del">删除</span></td>'+ 
+							  	'</tr>';
+						$('.table tbody').append(tr);
+						$('#count').val(dd.ccount);
+						$('#num').val(dd.cnum);
+						$('#cprice').val(dd.ccprice);
+					} 
+				},
+				error : function(data) {
+					console.log(data);
+					$('.error').text('操作失败，请确认有权限操作或刷新');
+				},
+			});
+
+		});
+	</script>
+</body>
+</html>

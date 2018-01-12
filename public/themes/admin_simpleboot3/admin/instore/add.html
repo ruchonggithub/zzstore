@@ -1,0 +1,86 @@
+<include file="public@header" />
+ <link href="__TMPL__/public/assets/simpleboot3/css/zzinfo.css" rel="stylesheet">
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li class=""><a href="{:url('instores')}">所有{$flag}单</a></li>
+        	<li class=""><a href="{:url('index')}">所有{$flag}记录</a></li>
+		
+			<li class="active"><a href="{:url('add')}">添加{$flag}</a></li>
+		</ul>
+		<form method="post"
+			class="form-horizontal js-ajax-form margin-top-20"
+			action="{:url('addPost')}">
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">入库单号</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" name="oid" value="{$oid}"
+						readonly /> <input type="hidden" class="form-control" name="uname"
+						value="{$admin.user_nickname|default=$admin.user_login}" />
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">入库仓库</label>
+				<div class="col-md-6 col-sm-10">
+					<select name="store" id="">
+						<foreach name="stores" item="vo">
+						<option value="{$vo.id}-{$vo.name}">{$vo.name}</option>
+						</foreach>
+					</select> 
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">购货人</label>
+				<div class="col-md-6 col-sm-10">
+					<select name="worker" id="">
+						<foreach name="workers" item="vo">
+						<option value="{$vo.id}-{$vo.name}">{$vo.name}</option>
+						</foreach>
+					</select>
+
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">供货商</label>
+				<div class="col-md-6 col-sm-10">
+					<select name="supplier" id="">
+						<foreach name="suppliers" item="vo">
+						<option value="{$vo.id}-{$vo.name}">{$vo.name}</option>
+						</foreach>
+					</select> 
+				</div>
+			</div>
+			<div class="form-group fleft">
+				<label class="col-sm-2 control-label">运费</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="number" min="0" class="form-control"  name="freight" />  
+				</div>
+			</div>
+			 <div class="form-group fleft">
+				<label class="col-sm-2 control-label">是否支付运费</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="radio"  name="is_freight" value="0"  checked/>不支付
+					<input type="radio"  name="is_freight" value="1" />支付
+				</div>
+			</div>
+			<div style="clear:both"></div>
+			<div class="form-group ">
+				<label class="col-sm-2 control-label">入库备注</label>
+				<div class="col-md-6 col-sm-10">
+					<input type="text" class="form-control" name="cdsc" />  
+				</div>
+			</div>
+			 
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" class="btn btn-primary js-ajax-submit">{:lang('ADD')}</button>
+					<a class="btn btn-default" href="javascript:history.back(-1);">{:lang('BACK')}</a>
+				</div>
+			</div>
+		</form>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+	 
+</body>
+</html>

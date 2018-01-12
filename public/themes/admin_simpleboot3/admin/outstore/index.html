@@ -1,0 +1,93 @@
+<include file="public@header" />
+</head>
+<body>
+
+	<div class="wrap js-check-wrap">
+		<ul class="nav nav-tabs">
+			<li class=""><a href="{:url('outstores')}">所有{$flag}单</a></li>
+			<li class="active"><a href="{:url('index')}">所有{$flag}记录</a></li>
+
+			<li><a href="{:url('add')}">添加{$flag}</a></li>
+		</ul>
+		<form class="well form-inline margin-top-20" method="post"
+			action="{:url('index')}">
+			产品分类: 
+			<select class="form-control" name="cid" style="width: 140px;">
+				<option value='0'>全部</option> 
+				{$cates_tree}
+			</select> &nbsp;&nbsp; 
+			查询条件: 
+			<select class="form-control" name="search_type"
+				style="width: 140px;">
+				<option value='oid'<eq name='type' value='oid'>selected</eq>>出库单号
+				</option>
+				<option value='gid'<eq name='type' value='gid'>selected</eq>>产品id
+				</option>
+				<option value='gname'<eq name='type' value='gname'>selected</eq>>产品名
+				</option>
+				<option value='sn'<eq name='type' value='sn'>selected</eq>>产品编号
+				</option>
+				<option value='cid'<eq name='type' value='cid'>selected</eq>>产品直属分类id
+				</option>
+				<option value='cname'<eq name='type' value='cname'>selected</eq>>产品直属分类名
+				</option>
+
+			</select> &nbsp;&nbsp; <input type="text" name="search_name" value="{$name}"
+				style="width: 140px;"> <input type="submit"
+				class="btn btn-primary" value="搜索" /> <a class="btn btn-danger"
+				href="{:url('index')}">清空</a>
+		</form>
+		<form method="post" class="js-ajax-form margin-top-20" action="">
+
+
+			<table class="table table-hover table-bordered table-list">
+				<thead>
+					<tr>
+						<th width="50">ID</th>
+						<th>出库单号</th>
+						<th>产品类名</th>
+						<th>产品名称--规格</th>
+						<th>条码编号</th>
+					 <th>自编号</th>
+						<th>单位</th>
+						<th>数量</th>
+						<th>售价</th>
+						<th>金额</th>
+						<th>参考售价</th>
+						<th>备注</th>
+
+						<th>更新时间</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<foreach name="list" item="vo">
+					<tr>
+
+						<td>{$vo.id}</td>
+						<td><a href="{:url('edit',array('oid'=>$vo['oid']))}">{$vo.oid}</a></td>
+						<td>{$vo.cname}</td>
+						<td>{$vo.gname}--{$vo.ganame}</td>
+						<td>{$vo.gsn}</td>
+						 <td>{$vo.gsn0}</td>
+						<td>{$vo.unit}</td>
+						<td>{$vo.num}</td>
+						<td>￥{$vo.outprice}</td>
+						<td>￥{$vo.cprice}</td>
+						<td>￥{$vo.outprice0}</td>
+
+						<td>{$vo.dsc}</td>
+						<td>{$vo.time|date='Y-m-d H:i:s',###}</td>
+
+					</tr>
+					</foreach>
+				</tbody>
+
+			</table>
+
+		</form>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__STATIC__/js/admin.js"></script>
+</body>
+</html>
