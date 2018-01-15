@@ -109,11 +109,10 @@ class CateModel extends Model
      */
     public function addCate($data)
     {
-        $result = true;
-        $result='ff';
+        $result = true; 
         self::startTrans();
         try {
-            
+            //在本地添加OK，但是外网就失败，因为path没有默认值
             $this->allowField(true)->save($data);
             $id = $this->id;
             if (empty($data['parent_id'])) {
@@ -127,10 +126,8 @@ class CateModel extends Model
             self::commit();
            
         } catch (\Exception $e) {
-            self::rollback();
-            
-            $result = false;
-            $result='ssssssss'.$e->getMessage();
+            self::rollback(); 
+            $result = false; 
         }
         
         return $result;

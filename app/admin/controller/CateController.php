@@ -83,8 +83,7 @@ class CateController extends AdminBaseController
         }
 
         $result = $CateModel->addCate($data);
-        dump($result);exit;
-        $this->error('添加失败!');
+       
         if ($result === false) {
             $this->error('添加失败!');
         }
