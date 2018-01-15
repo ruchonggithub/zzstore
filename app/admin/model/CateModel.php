@@ -110,6 +110,7 @@ class CateModel extends Model
     public function addCate($data)
     {
         $result = true;
+        $result='ff';
         self::startTrans();
         try {
             
@@ -124,13 +125,14 @@ class CateModel extends Model
 
             }
             self::commit();
+           
         } catch (\Exception $e) {
             self::rollback();
+            
             $result = false;
+            $result='ssssssss'.$e->getMessage();
         }
-
         
-
         return $result;
     }
 
