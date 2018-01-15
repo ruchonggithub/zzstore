@@ -261,7 +261,7 @@ class InstoreController extends AdminBaseController
             $this->error('此单号信息已不存在');
         }
         if($instore_info['status']!==0){
-            $this->error('不能修改已提交的入库单');
+            $this->error('不能修改已提交的入库单'.$instore_info['status']);
         }
         if($instore_info['aid0']!=session('ADMIN_ID')){
             $this->error('不能编辑他人的入库单号');
