@@ -161,7 +161,7 @@ class InstoreController extends AdminBaseController
             'type'=>['in',[1,3]]
         ];
         $workers=Db::name('worker')->where($where_worker)->order($order)->select();
-        dump($list);exit;
+      
         $this->assign('page',$page);
         $this->assign('list',$list);
         
@@ -358,7 +358,7 @@ class InstoreController extends AdminBaseController
         if(empty($instore_info)){
             $this->error('此单号信息已不存在');
         }
-        if($instore_info['status']!==0){
+        if($instore_info['status']!=0){
             $this->error('不能修改已提交的入库单');
         }
         if($instore_info['aid0']!=session('ADMIN_ID')){
@@ -733,7 +733,7 @@ class InstoreController extends AdminBaseController
         if(empty($instore_info)){
             $this->error('此单号信息已不存在');
         }
-        if($instore_info['status']!==0){
+        if($instore_info['status']!=0){
             $this->error('不能删除已提交的入库单');
         }
         if($instore_info['aid0']!=session('ADMIN_ID')){

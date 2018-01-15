@@ -242,7 +242,7 @@ class OutstoreController extends AdminBaseController
         if(empty($outstore_info)){
             $this->error('此单号信息已不存在');
         }
-        if($outstore_info['status']!==0){
+        if($outstore_info['status']!=0){
             $this->error('不能修改已提交的出库单');
         }
         if($outstore_info['aid0']!=session('ADMIN_ID')){
@@ -362,7 +362,7 @@ class OutstoreController extends AdminBaseController
         if(empty($outstore_info)){
             $this->error('此单号信息已不存在');
         }
-        if($outstore_info['status']!==0){
+        if($outstore_info['status']!=0){
             $this->error('不能修改已提交的出库单');
         }
         if($outstore_info['aid0']!=session('ADMIN_ID')){
@@ -763,7 +763,7 @@ class OutstoreController extends AdminBaseController
         if(empty($outstore_info)){
             $this->error('此单号信息已不存在');
         }
-        if($outstore_info['status']!==0){
+        if($outstore_info['status']!=0){
             $this->error('不能删除已提交的出库单');
         }
         if($outstore_info['aid0']!=session('ADMIN_ID')){
