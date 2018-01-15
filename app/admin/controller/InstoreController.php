@@ -161,7 +161,7 @@ class InstoreController extends AdminBaseController
             'type'=>['in',[1,3]]
         ];
         $workers=Db::name('worker')->where($where_worker)->order($order)->select();
-        
+        dump($list);exit;
         $this->assign('page',$page);
         $this->assign('list',$list);
         
