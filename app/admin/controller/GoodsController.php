@@ -260,7 +260,7 @@ class GoodsController extends AdminbaseController {
         $where=[];
         //已添加的规格 
         if(!empty($data['id'])){
-            $where['ga.id']=['eq', $data['id']];
+            $where['g.id']=['eq', $data['id']];
         }
         //分类
         if(empty($data['cid'])){
