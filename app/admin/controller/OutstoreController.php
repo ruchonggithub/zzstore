@@ -151,7 +151,7 @@ class OutstoreController extends AdminBaseController
         }else{
             $where['status']=['eq', $data['status']-1];
         }
-        $list= $m->where($where)->order($this->order)->paginate(10);
+        $list= $m->where($where)->order('id desc')->paginate(10);
         // 获取分页显示
         $page = $list->render();
         
@@ -203,16 +203,7 @@ class OutstoreController extends AdminBaseController
         ];
         $workers=Db::name('worker')->where($where_worker)->order($order)->select();
         
-        //得到出库单号,当月的次序
-        $date=getdate();
         
-        $date0=$date['year'].'-'.$date['mon'];
-        $time0=strtotime($date0);
-        
-        $m1=$this->m1;
-        $count=$m1->where('insert_time','egt',$time0)->count();
-        $oid=$date0.'-'.($count+1);
-        $this->assign('oid', $oid);
     
         $this->assign('suppliers', $suppliers);
         $this->assign('stores', $stores);
@@ -440,8 +431,23 @@ class OutstoreController extends AdminBaseController
     {
        //先填单号信息再跳转到编辑页面  
        $data = $this->request->param(); 
+       //得到库单号,当月的次序
+       $date=getdate();
+       
+       $date0=$date['year'].'-'.$date['mon'];
+       $time0=strtotime($date0);
+       
+       $m1=$this->m1;
+       //查找最后一个单号
+       $last=$m1->where('insert_time','egt',$time0)->order('insert_time desc')->find();
+       if(empty($last)){
+           $oid=$date0.'-1';
+       }else{
+           $arr=explode('-',$last['oid']);
+           $oid=$date0.'-'.($arr[2]+1);
+       }
        $data_info=[
-           'oid'=>$data['oid'],
+           'oid'=>$oid,
            'insert_time'=>time(),
            'time'=>time(),
            'status'=>0,
@@ -462,7 +468,7 @@ class OutstoreController extends AdminBaseController
             $data_info['seller_id']=$tmp[0];
             $data_info['seller_name']=$tmp[1];
             //更新出库单
-            $m1=$this->m1;
+            
             $insert=$m1->insertGetId($data_info);
             if($insert<1){
                 throw \Exception();

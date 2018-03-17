@@ -149,7 +149,7 @@ class InstoreController extends AdminBaseController
         }else{
             $where['status']=['eq', $data['status']-1];
         }
-        $list= $m->where($where)->order($this->order)->paginate(10);
+        $list= $m->where($where)->order('id desc')->paginate(10);
         // 获取分页显示
         $page = $list->render();
         
@@ -218,17 +218,7 @@ class InstoreController extends AdminBaseController
         ];
         $workers=Db::name('worker')->where($where_worker)->order($order)->select();
         
-        //得到入库单号,当月的次序
-        $date=getdate();
         
-        $date0=$date['year'].'-'.$date['mon'];
-        $time0=strtotime($date0);
-         
-        $m1=$this->m1;
-        $count=$m1->where('insert_time','egt',$time0)->count();
-        $oid=$date0.'-'.($count+1);
-        
-        $this->assign('oid', $oid);
         $this->assign('goods', $goods);
         $this->assign('suppliers', $suppliers);
         $this->assign('stores', $stores);
@@ -411,6 +401,22 @@ class InstoreController extends AdminBaseController
     {
          
        $data = $this->request->param(); 
+       //得到入库单号,当月的次序
+       $date=getdate();
+       
+       $date0=$date['year'].'-'.$date['mon'];
+       $time0=strtotime($date0);
+       
+       $m1=$this->m1;
+       //查找最后一个单号
+       $last=$m1->where('insert_time','egt',$time0)->order('insert_time desc')->find();
+       if(empty($last)){
+           $oid=$date0.'-1';
+       }else{
+           $arr=explode('-',$last['oid']);
+           $oid=$date0.'-'.($arr[2]+1);
+       }
+       
        $data_info=[
            'insert_time'=>time(),
            'time'=>time(),
@@ -418,7 +424,7 @@ class InstoreController extends AdminBaseController
            'aid0'=>session('ADMIN_ID'),
            'aname0'=>$data['uname'],
            'cdsc'=>$data['cdsc'],
-           'oid'=>$data['oid'],
+           'oid'=>$oid,
            'freight'=>$data['freight'],
            'is_freight'=>$data['is_freight']
           
@@ -435,7 +441,7 @@ class InstoreController extends AdminBaseController
             $data_info['buyer_name']=$tmp[1];
           
             //更新入库单
-            $m1=$this->m1;
+            
             $insert=$m1->insertGetId($data_info);
             if($insert<1){
                 throw \Exception();
