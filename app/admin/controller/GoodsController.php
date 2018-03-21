@@ -70,8 +70,11 @@ class GoodsController extends AdminbaseController {
             $where['name']=['like','%'.$data['name'].'%'];
         }
         $list= $m->where($where)->order($this->order)->paginate(10);
+        
+        
         // 获取分页显示
-        $page = $list->render();
+        $page = $list->appends($data)->render();
+       
         
         $CateModel = new CateModel();
         $catesTree      = $CateModel->adminCateTree($data['cid']);
@@ -295,7 +298,7 @@ class GoodsController extends AdminbaseController {
         ->where($where)
         ->order('c.path asc,g.sort asc,g.id asc,ga.sort asc')
         ->paginate(10);
-        $page = $list->render(); 
+        $page = $list->appends($data)->render(); 
         if(!empty($data['id']) && !empty($list[0])){
             $data['gname']=$list[0]['gname'];
         }

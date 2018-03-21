@@ -72,7 +72,8 @@ class AdminIndexController extends AdminBaseController
 
         $list = $usersQuery->whereOr($keywordComplex)->where($where)->order("create_time DESC")->paginate(10);
         // 获取分页显示
-        $page = $list->render();
+        $page = $list->appends($request)->render(); 
+        
         $this->assign('list', $list);
         $this->assign('page', $page);
         // 渲染模板输出

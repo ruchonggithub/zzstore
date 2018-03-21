@@ -84,8 +84,8 @@ class GoodsStoreController extends AdminBaseController
         ->paginate(10);
        
         // 获取分页显示
-        $page = $list->render();
-        
+      
+        $page = $list->appends($this->request->param())->render(); 
         //得到仓库
         $order='status desc,sort asc,id asc';
         $stores=Db::name('store')->order($order)->select();

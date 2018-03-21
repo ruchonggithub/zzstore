@@ -61,8 +61,9 @@ class ActionController extends AdminBaseController
         ->order($this->order)
         ->paginate(10);
        
-        // 获取分页显示
-        $page = $list->render(); 
+        // 获取分页显示 
+        $page = $list->appends($data)->render(); 
+       
        //得到所有管理员
         $admins=Db::name('user')->where('user_type',1)->select();
         $this->assign('page',$page);

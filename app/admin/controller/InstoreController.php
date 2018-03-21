@@ -91,7 +91,8 @@ class InstoreController extends AdminBaseController
        
         $list= $m->where($where)->order($this->order)->paginate(10);
         // 获取分页显示
-        $page = $list->render();
+        $page = $list->appends($this->request->param())->render(); 
+       
         
         $CateModel = new CateModel();
         $catesTree      = $CateModel->adminCateTree($data['cid']);
@@ -151,8 +152,8 @@ class InstoreController extends AdminBaseController
         }
         $list= $m->where($where)->order('id desc')->paginate(10);
         // 获取分页显示
-        $page = $list->render();
         
+        $page = $list->appends($this->request->param())->render(); 
         //得到供货商，仓库和购货员
         $order='status desc,sort asc,id asc';
         $suppliers=Db::name('supplier')->order($order)->select();

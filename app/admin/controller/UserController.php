@@ -61,7 +61,9 @@ class UserController extends AdminBaseController
             ->order("id DESC")
             ->paginate(10);
         // 获取分页显示
-        $page = $users->render();
+       
+        $data=$this->request->param();
+        $page = $users->appends($data)->render(); 
 
         $rolesSrc = Db::name('role')->select();
         $roles    = [];

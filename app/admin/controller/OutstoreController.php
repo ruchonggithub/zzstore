@@ -93,7 +93,7 @@ class OutstoreController extends AdminBaseController
        
         $list= $m->where($where)->order($this->order)->paginate(10);
         // 获取分页显示
-        $page = $list->render();
+        $page = $list->appends($this->request->param())->render(); 
         
         $CateModel = new CateModel();
         $catesTree      = $CateModel->adminCateTree($data['cid']);
@@ -153,8 +153,8 @@ class OutstoreController extends AdminBaseController
         }
         $list= $m->where($where)->order('id desc')->paginate(10);
         // 获取分页显示
-        $page = $list->render();
-        
+       
+        $page = $list->appends($this->request->param())->render(); 
         //得到顾客，仓库和销售员
         $order='status desc,sort asc,id asc';
         $suppliers=Db::name('customer')->order($order)->select();
